@@ -69,9 +69,9 @@ The agent traveler starts waiting for the user input the data to be extracted. I
 * `validate_input_agent`: responsible to receive the inputs and files, validate that they are correct inputs. The agent must reject if no valid input is received. The model used at this agent must be able to process inputs like PDF, text and others. If everything is OK, it passes to the next agent.
 * `extract_data_agent`: Read all inputs and process it. Deliver all the information in structured output format (JSON).
 * `research_agent`: this is a parallel agent. It's responsible to make all research based on the inputs of the user. It's composed by the agents above. All then have access to the `google_search` tool (wrapped in a `AgentTool`). The agents are as described below:
- * `what_to_pack_agent`: based on the places and activities, gives advice about what to pack for the trip.
- * `destination_agent`: this agent makes an extensive research about the places that will be visited, to later be used in the report. Images, rating, a brief description and highlights about each location.
- * `verifify_problem_agent`: verify problems and/or points of attention, like gaps at booking, missing flights between places, holidays (places can be closed), visa and health requirements for the countries, and so on.
+  * `what_to_pack_agent`: based on the places and activities, gives advice about what to pack for the trip.
+  * `destination_agent`: this agent makes an extensive research about the places that will be visited, to later be used in the report. Images, rating, a brief description and highlights about each location.
+  * `verifify_problem_agent`: verify problems and/or points of attention, like gaps at booking, missing flights between places, holidays (places can be closed), visa and health requirements for the countries, and so on.
 * `report_agent`: at last, the report agent is responsible to gather all the extracted and researched information and output a document (markdown format). Information like flights and bookings provided as tables, descriptions of the cities and points of interest, "what to pack" list, and points of attention. At the end, it shows the itinerary of the trip ordered by date. As its last job, it call two tools:
    * `save_report_tool`: to save the document as an artifact;
    * `create_calendar_tool`: to create a calendar file (ICS) that can be imported to applications like Google Calendar.
