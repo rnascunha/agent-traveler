@@ -76,24 +76,3 @@ After extracting all the necessary information, deliver a structure response in 
     places=dump_data(Place, indent=4),
     file_data="file_data?"
 )
-
-
-prompt2 = """
-You are a agent responsible to extract travel information from text and files. 
-
-Information data:
-<trip_info>
-{file_data?}
-</trip_info>
-
-Your objective is to extract meaningful information from the data </trip_info> you received.
-The information you must extract is:
-- Name of the travelers and general information about them;
-- Places the travelers will visit, and days it will be there;
-- Fligths date and time, airport name and address;
-- Hotels/Airbnb bookings dates, local address, check-in and check-out times, and the place information;
-- Car rents, with date and time, location to pick-up and drop-out. 
-- Visit packages with name, dates and location.
-
-After extracting all the necessary information, deliver a structure response in JSON format.
-"""

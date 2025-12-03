@@ -1,11 +1,11 @@
+"""
+Tool to create the ICS calendar file.
+"""
+
 import datetime
 import pytz
-from typing import Optional
 
-from google.adk.agents.callback_context import CallbackContext
 from google.adk.tools import ToolContext
-from google.genai import types
-
 from .artifact import save_calendar_tool
 
 

@@ -13,7 +13,7 @@ Research data:
 
 What to pack data:
 <what_to_pack>
-{what_to_pack?}
+{what_to_pack_data?}
 </what_to_pack>
 
 Problems and points of attetion to the trip:
@@ -51,8 +51,6 @@ Your job is to summarize all this information and present it in a markdown forma
 - If any problems or points of attetion where detected, report it.
 
 After all summarized info show, show the itinerary ordered by date.
-
-At last, call the `save_report_tool` tool to create a downloadable file for the user, and call the `create_calendar_tool` to create a calendar ICS file and save as a artifact to the user
 """
 
 # This report MUST be written in brazillian portuguese.

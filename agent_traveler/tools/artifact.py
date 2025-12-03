@@ -1,5 +1,10 @@
+"""
+Tools to save the artifacts created.
+"""
+
 from google.adk.tools import ToolContext
 import google.genai.types as types
+import json
 
 
 async def save_artifact_string(
@@ -55,4 +60,34 @@ async def save_calendar_tool(calendar: str, tool_context: ToolContext):
     """
     return await save_artifact_string(
         calendar, "calendar.ics", "text/calendar", tool_context
+    )
+
+
+async def save_kml_tool(kml: str, tool_context: ToolContext):
+    """Save KML map file to the persistent storage
+
+    Arg:
+        kml: KML map definition
+        tool_context: The ADK tool context.
+
+    Returns:
+        The status of the operation
+    """
+    return await save_artifact_string(
+        kml, "map.kml", "application/vnd.google-earth.kml+xml", tool_context
+    )
+
+
+async def save_state_tool(tool_context: ToolContext):
+    """Save agents state
+
+    Arg:
+        tool_context: The ADK tool context.
+
+    Returns:
+        The status of the operation
+    """
+    state_json = json.dumps(tool_context.state.to_dict())
+    return await save_artifact_string(
+        state_json, "state.json", "application/json", tool_context
     )

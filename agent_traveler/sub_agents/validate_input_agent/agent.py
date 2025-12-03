@@ -1,3 +1,8 @@
+"""
+Responsible to receive the inputs and files, and validate that they are
+correct inputs.
+"""
+
 from google.adk.agents import Agent
 
 from agent_traveler.libs.constants import VALIDATE_INPUT_AGENT_MODEL

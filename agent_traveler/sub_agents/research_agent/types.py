@@ -1,5 +1,5 @@
-from typing import Optional
-from pydantic import BaseModel, Field
+from typing import Optional, List
+from pydantic import BaseModel, RootModel, Field
 
 
 class POI(BaseModel):
@@ -33,14 +33,20 @@ class POISuggestions(BaseModel):
 class Destination(BaseModel):
     """A destination description the traveler will visit."""
 
-    name: str = Field(description="A Destination's Name")
-    country: str = Field(description="The Destination's Country Name")
-    image: str = Field(description="verified URL to an image of the destination")
-    brief: str = Field(
-        description="A brief of the destination, about the place and/or history. Make it look interesting and informatitve"
+    name: str = Field(description="A Destination's Name", default="")
+    country: str = Field(description="The Destination's Country Name", default="")
+    image: str = Field(
+        description="verified URL to an image of the destination", default=""
     )
-    highlights: str = Field(description="Short description highlighting key features")
-    rating: str = Field(description="Numerical rating (e.g., 4.5)")
+    brief: str = Field(
+        description="A brief of the destination, about the place and/or history. Make it look interesting and informatitve",
+        default="",
+    )
+    highlights: list[str] = Field(
+        description="A list of places and attractions to visit. Just show the name of the places. No explanation needed",
+        default=[],
+    )
+    rating: str = Field(description="Numerical rating (e.g., 4.5)", default="")
     # places: POISuggestions = Field(
     #     description="A list of points of interest to visit at the place. No more tham 5 places"
     # )
@@ -50,19 +56,21 @@ class DestinationList(BaseModel):
     """List of destionation the traveler will visit."""
 
     destination_data: list[Destination] = Field(
-        description="""List of destionation the traveler will visit."""
+        description="List of destionation the traveler will visit.", default=""
     )
 
 
 class WhatToPackList(BaseModel):
     """List of things to pack for the trip."""
 
-    what_to_pack: list[str] = Field(description="List of things to pack for the trip.")
+    what_to_pack_data: list[str] = Field(
+        description="List of things to pack for the trip.", default=[]
+    )
 
 
-class PoblemList(BaseModel):
+class ProblemList(BaseModel):
     """List of problems or points of attetion."""
 
     problem_data: list[str] = Field(
-        description="""List of problems or points of attetion."""
+        description="List of problems or points of attetion.", default=[]
     )

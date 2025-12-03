@@ -1,0 +1,182 @@
+<svg width="836pt" height="387pt" viewBox="0.00 0.00 836.00 387.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 383)">
+<polygon fill="#333537" stroke="none" points="-4,4 -4,-383 832.31,-383 832.31,4 -4,4"></polygon>
+<g id="clust1" class="cluster">
+<title>cluster_agent_traveler (Sequential Agent)</title>
+<path fill="#333537" stroke="#ffffff" d="M164.52,-45C164.52,-45 808.31,-45 808.31,-45 814.31,-45 820.31,-51 820.31,-57 820.31,-57 820.31,-359 820.31,-359 820.31,-365 814.31,-371 808.31,-371 808.31,-371 164.52,-371 164.52,-371 158.52,-371 152.52,-365 152.52,-359 152.52,-359 152.52,-57 152.52,-57 152.52,-51 158.52,-45 164.52,-45"></path>
+<text xml:space="preserve" text-anchor="middle" x="486.42" y="-354.4" font-family="Times,serif" font-size="14.00" fill="#cccccc">agent_traveler (Sequential Agent)</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_research_agent (Parallel Agent)</title>
+<path fill="#333537" stroke="#ffffff" d="M172.52,-153C172.52,-153 615.64,-153 615.64,-153 621.64,-153 627.64,-159 627.64,-165 627.64,-165 627.64,-326 627.64,-326 627.64,-332 621.64,-338 615.64,-338 615.64,-338 172.52,-338 172.52,-338 166.52,-338 160.52,-332 160.52,-326 160.52,-326 160.52,-165 160.52,-165 160.52,-159 166.52,-153 172.52,-153"></path>
+<text xml:space="preserve" text-anchor="middle" x="394.08" y="-321.4" font-family="Times,serif" font-size="14.00" fill="#cccccc">research_agent (Parallel Agent)</text>
+</g>
+<!-- validate_input_agent -->
+<g id="node1" class="node">
+<title>validate_input_agent</title>
+<ellipse fill="#0f5223" stroke="#0f5223" cx="283.34" cy="-71" rx="104.09" ry="18"></ellipse>
+<text xml:space="preserve" text-anchor="middle" x="283.34" y="-66.8" font-family="Times,serif" font-size="14.00" fill="#cccccc">🤖 validate_input_agent</text>
+</g>
+<!-- extract_data_agent -->
+<g id="node2" class="node">
+<title>extract_data_agent</title>
+<ellipse fill="none" stroke="#cccccc" cx="530.19" cy="-71" rx="96.03" ry="18"></ellipse>
+<text xml:space="preserve" text-anchor="middle" x="530.19" y="-66.8" font-family="Times,serif" font-size="14.00" fill="#cccccc">🤖 extract_data_agent</text>
+</g>
+<!-- validate_input_agent&#45;&gt;extract_data_agent -->
+<g id="edge1" class="edge">
+<title>validate_input_agent-&gt;extract_data_agent</title>
+<path fill="none" stroke="#cccccc" d="M387.82,-71C399.27,-71 410.95,-71 422.45,-71"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="422.35,-74.5 432.35,-71 422.35,-67.5 422.35,-74.5"></polygon>
+</g>
+<!-- research_agent -->
+<g id="node3" class="node">
+<title>research_agent</title>
+<ellipse fill="none" stroke="black" cx="737.26" cy="-18" rx="68.94" ry="18"></ellipse>
+<text xml:space="preserve" text-anchor="middle" x="737.26" y="-13.8" font-family="Times,serif" font-size="14.00">research_agent</text>
+</g>
+<!-- extract_data_agent&#45;&gt;research_agent -->
+<g id="edge2" class="edge">
+<title>extract_data_agent-&gt;research_agent</title>
+<path fill="none" stroke="#cccccc" d="M588.31,-56.24C615.6,-49.18 648.27,-40.74 675.96,-33.58"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="676.82,-36.98 685.63,-31.09 675.07,-30.2 676.82,-36.98"></polygon>
+</g>
+<!-- report_agent -->
+<g id="node4" class="node">
+<title>report_agent</title>
+<ellipse fill="none" stroke="#cccccc" cx="283.34" cy="-125" rx="71.91" ry="18"></ellipse>
+<text xml:space="preserve" text-anchor="middle" x="283.34" y="-120.8" font-family="Times,serif" font-size="14.00" fill="#cccccc">🤖 report_agent</text>
+</g>
+<!-- research_agent&#45;&gt;report_agent -->
+<g id="edge3" class="edge">
+<title>research_agent-&gt;report_agent</title>
+<path fill="none" stroke="#cccccc" d="M677.22,-8.75C612.8,-1.75 508.91,0.23 434.16,-44 409.33,-58.69 421.83,-81.53 398.16,-98 387.15,-105.66 374.25,-111.16 361.17,-115.11"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="360.38,-111.7 351.64,-117.68 362.2,-118.46 360.38,-111.7"></polygon>
+</g>
+<!-- output_agent -->
+<g id="node5" class="node">
+<title>output_agent</title>
+<ellipse fill="none" stroke="#cccccc" cx="530.19" cy="-126" rx="73.53" ry="18"></ellipse>
+<text xml:space="preserve" text-anchor="middle" x="530.19" y="-121.8" font-family="Times,serif" font-size="14.00" fill="#cccccc">🤖 output_agent</text>
+</g>
+<!-- report_agent&#45;&gt;output_agent -->
+<g id="edge4" class="edge">
+<title>report_agent-&gt;output_agent</title>
+<path fill="none" stroke="#cccccc" d="M355.49,-125.29C383.53,-125.41 415.96,-125.54 445.15,-125.66"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="445.06,-129.16 455.07,-125.7 445.09,-122.16 445.06,-129.16"></polygon>
+</g>
+<!-- create_map_points -->
+<g id="node11" class="node">
+<title>create_map_points</title>
+<path fill="none" stroke="#cccccc" d="M794.88,-198C794.88,-198 679.64,-198 679.64,-198 673.64,-198 667.64,-192 667.64,-186 667.64,-186 667.64,-174 667.64,-174 667.64,-168 673.64,-162 679.64,-162 679.64,-162 794.88,-162 794.88,-162 800.88,-162 806.88,-168 806.88,-174 806.88,-174 806.88,-186 806.88,-186 806.88,-192 800.88,-198 794.88,-198"></path>
+<text xml:space="preserve" text-anchor="middle" x="737.26" y="-175.8" font-family="Times,serif" font-size="14.00" fill="#cccccc">🔧 create_map_points</text>
+</g>
+<!-- output_agent&#45;&gt;create_map_points -->
+<g id="edge8" class="edge">
+<title>output_agent-&gt;create_map_points</title>
+<path fill="none" stroke="#cccccc" d="M584.86,-138.36C598.82,-141.69 613.82,-145.38 627.64,-149 642.53,-152.9 658.51,-157.32 673.5,-161.58"></path>
+</g>
+<!-- create_calendar_tool -->
+<g id="node12" class="node">
+<title>create_calendar_tool</title>
+<path fill="none" stroke="#cccccc" d="M800.31,-252C800.31,-252 674.22,-252 674.22,-252 668.22,-252 662.22,-246 662.22,-240 662.22,-240 662.22,-228 662.22,-228 662.22,-222 668.22,-216 674.22,-216 674.22,-216 800.31,-216 800.31,-216 806.31,-216 812.31,-222 812.31,-228 812.31,-228 812.31,-240 812.31,-240 812.31,-246 806.31,-252 800.31,-252"></path>
+<text xml:space="preserve" text-anchor="middle" x="737.26" y="-229.8" font-family="Times,serif" font-size="14.00" fill="#cccccc">🔧 create_calendar_tool</text>
+</g>
+<!-- output_agent&#45;&gt;create_calendar_tool -->
+<g id="edge9" class="edge">
+<title>output_agent-&gt;create_calendar_tool</title>
+<path fill="none" stroke="#cccccc" d="M596.58,-134.09C607.64,-137.49 618.48,-142.27 627.64,-149 651.82,-166.77 639.1,-187.86 662.22,-207 666.12,-210.23 670.43,-213.09 674.97,-215.62"></path>
+</g>
+<!-- save_report_tool -->
+<g id="node13" class="node">
+<title>save_report_tool</title>
+<path fill="none" stroke="#cccccc" d="M789.05,-90C789.05,-90 685.47,-90 685.47,-90 679.47,-90 673.47,-84 673.47,-78 673.47,-78 673.47,-66 673.47,-66 673.47,-60 679.47,-54 685.47,-54 685.47,-54 789.05,-54 789.05,-54 795.05,-54 801.05,-60 801.05,-66 801.05,-66 801.05,-78 801.05,-78 801.05,-84 795.05,-90 789.05,-90"></path>
+<text xml:space="preserve" text-anchor="middle" x="737.26" y="-67.8" font-family="Times,serif" font-size="14.00" fill="#cccccc">🔧 save_report_tool</text>
+</g>
+<!-- output_agent&#45;&gt;save_report_tool -->
+<g id="edge10" class="edge">
+<title>output_agent-&gt;save_report_tool</title>
+<path fill="none" stroke="#cccccc" d="M581.62,-112.72C609.25,-105.44 643.76,-96.36 673.16,-88.62"></path>
+</g>
+<!-- save_state_tool -->
+<g id="node14" class="node">
+<title>save_state_tool</title>
+<path fill="none" stroke="#cccccc" d="M785.17,-144C785.17,-144 689.36,-144 689.36,-144 683.36,-144 677.36,-138 677.36,-132 677.36,-132 677.36,-120 677.36,-120 677.36,-114 683.36,-108 689.36,-108 689.36,-108 785.17,-108 785.17,-108 791.17,-108 797.17,-114 797.17,-120 797.17,-120 797.17,-132 797.17,-132 797.17,-138 791.17,-144 785.17,-144"></path>
+<text xml:space="preserve" text-anchor="middle" x="737.26" y="-121.8" font-family="Times,serif" font-size="14.00" fill="#cccccc">🔧 save_state_tool</text>
+</g>
+<!-- output_agent&#45;&gt;save_state_tool -->
+<g id="edge11" class="edge">
+<title>output_agent-&gt;save_state_tool</title>
+<path fill="none" stroke="#cccccc" d="M604.07,-126C628.01,-126 654.32,-126 677.12,-126"></path>
+</g>
+<!-- destination_agent -->
+<g id="node6" class="node">
+<title>destination_agent</title>
+<ellipse fill="none" stroke="#cccccc" cx="283.34" cy="-179" rx="91.22" ry="18"></ellipse>
+<text xml:space="preserve" text-anchor="middle" x="283.34" y="-174.8" font-family="Times,serif" font-size="14.00" fill="#cccccc">🤖 destination_agent</text>
+</g>
+<!-- destination_tool_agent -->
+<g id="node7" class="node">
+<title>destination_tool_agent</title>
+<path fill="none" stroke="#cccccc" d="M598.7,-198C598.7,-198 461.67,-198 461.67,-198 455.67,-198 449.67,-192 449.67,-186 449.67,-186 449.67,-174 449.67,-174 449.67,-168 455.67,-162 461.67,-162 461.67,-162 598.7,-162 598.7,-162 604.7,-162 610.7,-168 610.7,-174 610.7,-174 610.7,-186 610.7,-186 610.7,-192 604.7,-198 598.7,-198"></path>
+<text xml:space="preserve" text-anchor="middle" x="530.19" y="-175.8" font-family="Times,serif" font-size="14.00" fill="#cccccc">🤖 destination_tool_agent</text>
+</g>
+<!-- destination_agent&#45;&gt;destination_tool_agent -->
+<g id="edge5" class="edge">
+<title>destination_agent-&gt;destination_tool_agent</title>
+<path fill="none" stroke="#cccccc" d="M374.82,-179.37C399.2,-179.47 425.4,-179.58 449.17,-179.67"></path>
+</g>
+<!-- what_to_pack_agent -->
+<g id="node8" class="node">
+<title>what_to_pack_agent</title>
+<ellipse fill="none" stroke="#cccccc" cx="283.34" cy="-287" rx="103.02" ry="18"></ellipse>
+<text xml:space="preserve" text-anchor="middle" x="283.34" y="-282.8" font-family="Times,serif" font-size="14.00" fill="#cccccc">🤖 what_to_pack_agent</text>
+</g>
+<!-- google_search_grounding -->
+<g id="node9" class="node">
+<title>google_search_grounding</title>
+<path fill="none" stroke="#cccccc" d="M607.64,-278C607.64,-278 452.73,-278 452.73,-278 446.73,-278 440.73,-272 440.73,-266 440.73,-266 440.73,-254 440.73,-254 440.73,-248 446.73,-242 452.73,-242 452.73,-242 607.64,-242 607.64,-242 613.64,-242 619.64,-248 619.64,-254 619.64,-254 619.64,-266 619.64,-266 619.64,-272 613.64,-278 607.64,-278"></path>
+<text xml:space="preserve" text-anchor="middle" x="530.19" y="-255.8" font-family="Times,serif" font-size="14.00" fill="#cccccc">🤖 google_search_grounding</text>
+</g>
+<!-- what_to_pack_agent&#45;&gt;google_search_grounding -->
+<g id="edge6" class="edge">
+<title>what_to_pack_agent-&gt;google_search_grounding</title>
+<path fill="none" stroke="#cccccc" d="M371.7,-277.37C394.08,-274.9 418.18,-272.24 440.62,-269.77"></path>
+</g>
+<!-- verifify_problem_agent -->
+<g id="node10" class="node">
+<title>verifify_problem_agent</title>
+<ellipse fill="none" stroke="#cccccc" cx="283.34" cy="-233" rx="114.82" ry="18"></ellipse>
+<text xml:space="preserve" text-anchor="middle" x="283.34" y="-228.8" font-family="Times,serif" font-size="14.00" fill="#cccccc">🤖 verifify_problem_agent</text>
+</g>
+<!-- verifify_problem_agent&#45;&gt;google_search_grounding -->
+<g id="edge7" class="edge">
+<title>verifify_problem_agent-&gt;google_search_grounding</title>
+<path fill="none" stroke="#cccccc" d="M378.65,-243.4C399,-245.64 420.43,-248.01 440.55,-250.23"></path>
+</g>
+<!-- agent_traveler -->
+<g id="node15" class="node">
+<title>agent_traveler</title>
+<ellipse fill="none" stroke="black" cx="66.26" cy="-233" rx="66.26" ry="18"></ellipse>
+<text xml:space="preserve" text-anchor="middle" x="66.26" y="-228.8" font-family="Times,serif" font-size="14.00">agent_traveler</text>
+</g>
+<!-- agent_traveler&#45;&gt;destination_agent -->
+<g id="edge12" class="edge">
+<title>agent_traveler-&gt;destination_agent</title>
+<path fill="none" stroke="#cccccc" d="M109.08,-218.82C122.83,-214.41 138.25,-209.73 152.52,-206 169.33,-201.6 187.51,-197.45 204.79,-193.78"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="205.44,-197.22 214.52,-191.76 204.01,-190.37 205.44,-197.22"></polygon>
+</g>
+<!-- agent_traveler&#45;&gt;what_to_pack_agent -->
+<g id="edge13" class="edge">
+<title>agent_traveler-&gt;what_to_pack_agent</title>
+<path fill="none" stroke="#cccccc" d="M109.08,-247.18C122.83,-251.59 138.25,-256.27 152.52,-260 168.09,-264.07 184.82,-267.93 200.94,-271.39"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="199.98,-274.77 210.49,-273.41 201.43,-267.92 199.98,-274.77"></polygon>
+</g>
+<!-- agent_traveler&#45;&gt;verifify_problem_agent -->
+<g id="edge14" class="edge">
+<title>agent_traveler-&gt;verifify_problem_agent</title>
+<path fill="none" stroke="#cccccc" d="M132.96,-233C140.69,-233 148.76,-233 156.97,-233"></path>
+<polygon fill="#cccccc" stroke="#cccccc" points="156.73,-236.5 166.73,-233 156.73,-229.5 156.73,-236.5"></polygon>
+</g>
+</g>
+</svg>

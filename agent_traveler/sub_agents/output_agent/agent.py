@@ -1,25 +1,20 @@
-from google.adk.agents import Agent, ParallelAgent
-
-from ..report_agent.agent import report_agent
-
-# from agent_traveler.tools.artifact import save_calendar_tool
-# from .prompt import calendar_prompt
-
-from agent_traveler.tools.calendar import create_calendar_callback
-
-# calendar_agent = Agent(
-#     name="calendar_agent",
-#     description="Creates a caledar file output",
-#     model="gemini-2.0-flash",
-#     instruction=calendar_prompt,
-#     tools=[save_calendar_tool],
-# )
+"""
+Agent to call four tools to create/save the outputs based on all the
+data gathered.
+"""
 
 
-output_agent = ParallelAgent(
+from google.adk.agents import Agent
+from .prompt import prompt
+from agent_traveler.libs.constants import OUTPUT_AGENT_MODEL
+from agent_traveler.tools.places import create_map_points
+from agent_traveler.tools.calendar import create_calendar_tool
+from agent_traveler.tools.artifact import save_report_tool, save_state_tool
+
+output_agent = Agent(
     name="output_agent",
-    description="Call sub agents that will create the diferent outputs",
-    # sub_agents=[report_agent, calendar_agent],
-    sub_agents=[report_agent],
-    after_agent_callback=create_calendar_callback,
+    description="Creates all the outputs from data extracted and researched",
+    model=OUTPUT_AGENT_MODEL,
+    instruction=prompt,
+    tools=[create_map_points, create_calendar_tool, save_report_tool, save_state_tool],
 )

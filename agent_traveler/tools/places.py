@@ -1,62 +1,75 @@
+"""
+Tool research about places to get its latitude, longitude (and more) using
+the Google Places (new) API
+"""
+
 import os
 from typing import Dict, List, Any
 from google.adk.tools import ToolContext
+from .artifact import save_kml_tool
 
+import simplekml
 import requests
 
 
+defaultFields = ["formattedAddress", "id", "photos", "location"]
+
+
 class PlacesService:
-    """Wrapper to Placees API."""
+    """Wrapper to Places API."""
 
-    def _check_key(self):
-        if (
-            not hasattr(self, "places_api_key") or not self.places_api_key
-        ):  # Either it doesn't exist or is None.
-            # https://developers.google.com/maps/documentation/places/web-service/get-api-key
-            self.places_api_key = os.getenv("GOOGLE_PLACES_API_KEY")
+    def __init__(self, api_key: str = ""):
+        self.places_api_key = api_key if api_key else os.getenv("GOOGLE_PLACES_API_KEY")
+        if not self.places_api_key:
+            raise RuntimeError("Missing API Key")
 
-    def find_place_from_text(self, query: str) -> Dict[str, str]:
+    def find_place_from_text(
+        self, query: str, fields: list[str] = defaultFields
+    ) -> Dict[str, str]:
         """Fetches place details using a text query."""
-        self._check_key()
-        places_url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
-        params = {
-            "input": query,
-            "inputtype": "textquery",
-            "fields": "place_id,formatted_address,name,photos,geometry",
-            "key": self.places_api_key,
+
+        if len(fields) == 0:
+            raise Exception("No fields selected")
+
+        url = "https://places.googleapis.com/v1/places:searchText"
+        headers = {
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": self.places_api_key,
+            "X-Goog-FieldMask": "places." + ",places.".join(fields),
         }
+        data = {"textQuery": query}
 
-        try:
-            response = requests.get(places_url, params=params)
-            response.raise_for_status()
-            place_data = response.json()
+        response = requests.post(url, headers=headers, json=data)
+        response.raise_for_status()
+        place_data = response.json()
 
-            if not place_data.get("candidates"):
-                return {"error": "No places found."}
+        if len(place_data["places"]) == 0:
+            raise Exception("No places found")
 
-            # Extract data for the first candidate
-            place_details = place_data["candidates"][0]
-            place_id = place_details["place_id"]
-            place_name = place_details["name"]
-            place_address = place_details["formatted_address"]
-            photos = self.get_photo_urls(place_details.get("photos", []), maxwidth=400)
-            map_url = self.get_map_url(place_id)
-            location = place_details["geometry"]["location"]
-            lat = str(location["lat"])
-            lng = str(location["lng"])
+        out = dict()
+        place_details = place_data["places"][0]
 
-            return {
-                "place_id": place_id,
-                "place_name": place_name,
-                "place_address": place_address,
-                "photos": photos,
-                "map_url": map_url,
-                "lat": lat,
-                "lng": lng,
-            }
+        for f in fields:
+            match f:
+                case "displayName":
+                    out[f] = place_details["displayName"]["text"]
+                case "photos":
+                    out[f] = self.get_photo_urls(
+                        place_details.get("photos", []), maxwidth=400
+                    )
+                case "location":
+                    location = place_details["location"]
+                    out["lat"] = str(location["latitude"])
+                    out["long"] = str(location["longitude"])
+                case "formattedAddress":
+                    out["address"] = place_details["formattedAddress"]
+                case "id":
+                    out["id"] = place_details["id"]
+                    out["map_url"] = self.get_map_url(place_details["id"])
+                case _:
+                    out[f] = place_details[f]
 
-        except requests.exceptions.RequestException as e:
-            return {"error": f"Error fetching place data: {e}"}
+        return out
 
     def get_photo_urls(
         self, photos: List[Dict[str, Any]], maxwidth: int = 400
@@ -64,7 +77,7 @@ class PlacesService:
         """Extracts photo URLs from the 'photos' list."""
         photo_urls = []
         for photo in photos:
-            photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth={maxwidth}&photoreference={photo['photo_reference']}&key={self.places_api_key}"
+            photo_url = f"https://places.googleapis.com/v1/{photo["name"]}/media?maxWidthPx={maxwidth}&key={self.places_api_key}"
             photo_urls.append(photo_url)
         return photo_urls
 
@@ -77,14 +90,13 @@ class PlacesService:
 places_service = PlacesService()
 
 
-def place_tool(place, search_query: str):
-    result = places_service.find_place_from_text(search_query)
-    # Fill the place holders with verified information.
-    place["place_id"] = result["place_id"] if "place_id" in result else None
-    place["map_url"] = result["map_url"] if "map_url" in result else None
-    if "lat" in result and "lng" in result:
-        place["lat"] = result["lat"]
-        place["long"] = result["lng"]
+def place_tool(place, search_query: str, fields: list[str] = defaultFields):
+    try:
+        result = places_service.find_place_from_text(search_query, fields)
+        for k, v in result.items():
+            place[k] = v
+    except Exception as e:
+        print(e)
 
     return place
 
@@ -108,16 +120,83 @@ def map_tool(tool_context: ToolContext):
             )
         tool_context.state["extracted_data"]["places"] = places
 
-        # destinations = tool_context.state.get("destination_data", [])
-        # for dest in destinations:
-        #     plcs = dest.get("places", [])
-        #     for p in plcs:
-        #         place_tool(p, ", ".join(p["name"], p["country"]))
-        #     dest["places"] = plcs
-        # tool_context.state["destination_data"] = destinations
-
-        # return places, destinations
-        return places
+        return {
+            "status": "success",
+            "places": places,
+            "message": "Place information was updated correctly",
+        }
     except Exception as e:
         print(f"Error calling map_tool {e}")
         return {"status": "error", "message": f"Exception called! {e}"}
+
+
+def update_places_with_destinations(tool_context: ToolContext):
+    destinations = tool_context.state.get("destination_data", dict()).get(
+        "destination_data"
+    )
+    if not destinations:
+        return []
+
+    places = tool_context.state["extracted_data"].get("places", [])
+    for dest in destinations:
+        highlights = dest.get("highlights", [])
+        for h in highlights:
+            new_place = {
+                "name": h,
+                "address": ", ".join([dest["name"], dest["country"]]),
+                "type": "highlights",
+                "place_id": "",
+                "map_url": "",
+                "lat": "",
+                "long": "",
+            }
+            places.append(new_place)
+            place_tool(new_place, ", ".join([h, new_place["address"]]))
+
+    return places
+
+
+def create_kml(places_list):
+    kml = simplekml.Kml()
+
+    for place in places_list:
+        pnt = kml.newpoint(
+            name=place.get("name"),
+            coords=[(place.get("long"), place.get("lat"))],
+        )
+
+        pnt.description = f"Place ID: {place.get('place_id')}"
+        pnt.extendeddata.newdata(name="place_id", value=place.get("place_id"))
+
+    return kml.kml()
+
+
+async def create_map_points(tool_context: ToolContext):
+    """
+    Create a file of type KML with the places, to be imported to Google My Maps.
+    The output will be saved at a persistent storage.
+
+    Args:
+        tool_context: The ADK tool context.
+
+    Returns:
+        The status of the operation, with data
+    """
+    out = map_tool(tool_context)
+    if out["status"] == "error":
+        return out
+
+    places = out["places"]
+
+    places_hightlights = update_places_with_destinations(tool_context)
+    places.extend(places_hightlights)
+
+    places = [
+        p for p in places if "lat" in p and "long" in p and p["lat"] and p["long"]
+    ]
+    if len(places) > 0:
+        output = create_kml(places)
+        await save_kml_tool(output, tool_context)
+        return {"status": "success", "message": "create KML file", "kml": output}
+
+    return {"status": "error", "message": "No data to create map place"}

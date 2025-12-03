@@ -1,3 +1,11 @@
+"""
+Google Search agent tool.
+
+Its necessary to use a agent to overcome ADK limitation to
+built-in tools in sub agents.
+"""
+
+
 from google.adk.agents import Agent
 from google.adk.tools.agent_tool import AgentTool
 from google.adk.tools.google_search_tool import google_search
@@ -8,7 +16,7 @@ search_agent = Agent(
     model=SEARCH_TOOL_MODEL,
     name="google_search_grounding",
     description="An agent providing Google-search grounding capability",
-    instruction=""",
+    instruction="""
     Answer the user's question directly using google_search grounding tool; Provide a brief but concise response. 
     Rather than a detail response, provide the immediate actionable item for a tourist or traveler, in a single sentence.
     Do not ask the user to check or look up information for themselves, that's your role; do your best to be informative.
