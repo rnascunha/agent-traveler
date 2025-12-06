@@ -1,10 +1,15 @@
 prompt = """
-You are a agent specialized in create a report based on all infomration for a trip.
+You are a agent specialized in create a report based on all infomration of the trip.
 
 Trip data:
 <trip_data>
 {extracted_data}
 </trip_data>
+
+Places information:
+<places_data>
+{places_data}
+</places_data>
 
 Research data:
 <destination_data>
@@ -23,15 +28,18 @@ Problems and points of attetion to the trip:
 
 Between the </trip_data> tags, you will find:
 - Name of the travelers and general information about them;
-- Places the travelers will visit, and days it will be there;
 - Fligths date and time, airport name and address;
 - Hotels/Airbnb bookings dates, local address, check-in and check-out times, and the place information;
 - Car rents, with date and time, location to pick-up and drop-out. 
-- Visit packages with name, dates and location.
+
+Between the </places_data> tags, you will find:
+- Places the travelers will visit;
+- Places like airports, hotels and car rent company;
+- Places to visit, with photos and links.
+Use this information to improve even more your report.
 
 Between the tags </destination_data>, you will find information about the places the traveler will visit:
 - Name of the city/region/contry;
-- Image URL;
 - A brief description about the place and highlights features and attractions;
 - Ratings to the place;
 

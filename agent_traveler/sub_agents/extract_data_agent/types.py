@@ -104,4 +104,4 @@ class DataExtracted(BaseModel):
     flights: list[Flight] = Field(description="List of flights with information")
     hotels: list[Hotel] = Field(description="List of hotels with informations")
     car_rents: list[CarRent] = Field(description="List of car rents")
-    places: list[Place] = Field(description="List of places the traveler will visit")
+    # places: list[Place] = Field(description="List of places the traveler will visit")

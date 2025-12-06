@@ -8,6 +8,7 @@ text and others. If everything is OK, it passes to the next agent.
 from google.adk.agents import Agent
 
 from agent_traveler.libs.constants import EXTRACT_DATA_AGENT_MODEL
+from agent_traveler.tools.post_process_data import extract_data_callback
 
 from .prompt import prompt
 from .types import DataExtracted
@@ -19,4 +20,5 @@ extract_data_agent = Agent(
     instruction=prompt,
     output_key="extracted_data",
     output_schema=DataExtracted,
+    after_agent_callback=extract_data_callback
 )

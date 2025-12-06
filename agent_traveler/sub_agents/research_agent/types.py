@@ -1,33 +1,33 @@
-from typing import Optional, List
-from pydantic import BaseModel, RootModel, Field
+# from typing import Optional, List
+from pydantic import BaseModel, Field
 
 
-class POI(BaseModel):
-    """A Point Of Interest suggested by the agent."""
+# class POI(BaseModel):
+#     """A Point Of Interest suggested by the agent."""
 
-    place: str = Field(description="Name of the attraction")
-    address: str = Field(
-        description="An address or sufficient information to geocode for a Lat/Lon"
-    )
-    lat: str = Field(
-        description="Numerical representation of Latitude of the location (e.g., 20.6843)"
-    )
-    long: str = Field(
-        description="Numerical representation of Longitude of the location (e.g., -88.5678)"
-    )
-    rating: str = Field(
-        description="Numerical representation of rating (e.g. 4.8 , 3.0 , 1.0 etc)"
-    )
-    highlights: str = Field(description="Short description highlighting key features")
-    image_url: str = Field(description="verified URL to an image of the destination")
-    map_url: Optional[str] = Field(description="Verified URL to Google Map")
-    place_id: Optional[str] = Field(description="Google Map place_id")
+#     place: str = Field(description="Name of the attraction")
+#     address: str = Field(
+#         description="An address or sufficient information to geocode for a Lat/Lon"
+#     )
+#     lat: str = Field(
+#         description="Numerical representation of Latitude of the location (e.g., 20.6843)"
+#     )
+#     long: str = Field(
+#         description="Numerical representation of Longitude of the location (e.g., -88.5678)"
+#     )
+#     rating: str = Field(
+#         description="Numerical representation of rating (e.g. 4.8 , 3.0 , 1.0 etc)"
+#     )
+#     highlights: str = Field(description="Short description highlighting key features")
+#     image_url: str = Field(description="verified URL to an image of the destination")
+#     map_url: Optional[str] = Field(description="Verified URL to Google Map")
+#     place_id: Optional[str] = Field(description="Google Map place_id")
 
 
-class POISuggestions(BaseModel):
-    """Points of interest recommendation."""
+# class POISuggestions(BaseModel):
+#     """Points of interest recommendation."""
 
-    places: list[POI] = Field(description="""Points of interest recommendation.""")
+#     places: list[POI] = Field(description="""Points of interest recommendation.""")
 
 
 class Destination(BaseModel):
@@ -35,9 +35,9 @@ class Destination(BaseModel):
 
     name: str = Field(description="A Destination's Name", default="")
     country: str = Field(description="The Destination's Country Name", default="")
-    image: str = Field(
-        description="verified URL to an image of the destination", default=""
-    )
+    # image: str = Field(
+    #     description="verified URL to an image of the destination", default=""
+    # )
     brief: str = Field(
         description="A brief of the destination, about the place and/or history. Make it look interesting and informatitve",
         default="",
@@ -47,9 +47,6 @@ class Destination(BaseModel):
         default=[],
     )
     rating: str = Field(description="Numerical rating (e.g., 4.5)", default="")
-    # places: POISuggestions = Field(
-    #     description="A list of points of interest to visit at the place. No more tham 5 places"
-    # )
 
 
 class DestinationList(BaseModel):

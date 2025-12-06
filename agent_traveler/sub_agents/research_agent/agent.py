@@ -4,8 +4,6 @@ Responsible to make all research based on the inputs of the user
 
 from google.adk.agents import Agent, ParallelAgent
 from google.adk.tools import AgentTool
-from google.adk.models.google_llm import Gemini
-from google.genai import types
 
 
 from agent_traveler.libs.constants import (
@@ -15,8 +13,7 @@ from agent_traveler.libs.constants import (
 )
 
 from agent_traveler.tools.search import google_search_grounding
-
-from agent_traveler.tools.images import search_images_tool
+from agent_traveler.tools.places import research_destination_callback
 
 from .prompt import (
     what_to_pack_prompt,
@@ -26,33 +23,27 @@ from .prompt import (
 )
 from .types import DestinationList, WhatToPackList, ProblemList, Destination
 
-# Retry configuration
-retry_config = types.HttpRetryOptions(
-    attempts=10,  # Maximum retry attempts
-    exp_base=7,  # Delay multiplier
-    initial_delay=1,
-    http_status_codes=[429, 500, 503, 504],  # Retry on these HTTP errors
-)
 
 # Agent tool to research about destination
 destination_tool_agent = Agent(
     name="destination_tool_agent",
     description="Research about a destination",
-    model=Gemini(model=DESTIONATION_AGENT_MODEL, retry_options=retry_config),
+    model=DESTIONATION_AGENT_MODEL,
     output_schema=Destination,
     instruction=destination_tool_prompt,
-    tools=[google_search_grounding, search_images_tool],
+    tools=[google_search_grounding],
 )
 
 # Check all inputs and research about destinations
 destination_agent = Agent(
     name="destination_agent",
     description="Research agent to get information about trips and places.",
-    model=Gemini(model=DESTIONATION_AGENT_MODEL, retry_options=retry_config),
+    model=DESTIONATION_AGENT_MODEL,
     output_key="destination_data",
     output_schema=DestinationList,
     instruction=destination_prompt,
     tools=[AgentTool(destination_tool_agent)],
+    after_agent_callback=research_destination_callback,
 )
 
 # based on the places and activities, gives advice about what to pack for the trip
