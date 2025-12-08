@@ -235,20 +235,16 @@ def update_destination(dest):
     return place_tool(new_dest, new_dest["address"])
 
 
-from pprint import pprint
-
-
 async def extract_places_destination(destinations):
     places = []
 
     for dest in destinations:
-        pprint(dest)
         try:
             highlights = dest.get("highlights", [])
             dest["reference"] = str(uuid4())
-            tasks = [asyncio.to_thread(update_destination, dest)].extend(
-                [asyncio.to_thread(update_highlight, h, dest) for h in highlights]
-            )
+            tasks = [asyncio.to_thread(update_destination, dest)] + [
+                asyncio.to_thread(update_highlight, h, dest) for h in highlights
+            ]
             new_places = await asyncio.gather(*tasks)
             places.extend(new_places)
         except Exception as e:

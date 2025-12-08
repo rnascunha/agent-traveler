@@ -11,7 +11,7 @@ data_path = "./data/output/state.json"
 
 # geolocator = GeoNames(username="rnascunha")
 # geolocator = Nominatim(user_agent="my_app")
-geolocator = GoogleV3(api_key="AIzaSyAzc5KxfL49CEcjUu1U3BAdiZADWsFTUQo")
+geolocator = GoogleV3(api_key=os.getenv("GOOGLE_PLACES_API_KEY"))
 
 address = "London, UK"
 address = "Paris, FR"

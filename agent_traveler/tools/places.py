@@ -5,12 +5,10 @@ the Google Places (new) API
 
 from google.adk.tools import ToolContext
 from google.adk.agents.callback_context import CallbackContext
-import simplekml
+from agent_traveler.libs.maps import create_kml
 
 from .artifact import save_kml_tool
 from agent_traveler.libs.extract_update_data import extract_places_destination
-
-from pprint import pprint
 
 
 async def research_destination_callback(callback_context: CallbackContext):
@@ -29,25 +27,6 @@ async def research_destination_callback(callback_context: CallbackContext):
     callback_context.state["places_data"].extend(places)
 
     return None
-
-
-def create_kml(places_list):
-    kml = simplekml.Kml()
-
-    for place in places_list:
-        pnt = kml.newpoint(
-            name=place.get("name"),
-            coords=[(place.get("long"), place.get("lat"))],
-        )
-
-        images_html = ""
-        for url in place["photos"]:
-            images_html += f'<img src="{url}" width="300" style="margin-bottom:10px; border-radius:5px;"><br>'
-        pnt.description = f"<div style=width:300px>{images_html}</div>"
-
-        pnt.extendeddata.newdata(name="place_id", value=place.get("place_id"))
-
-    return kml.kml()
 
 
 async def create_map_points(tool_context: ToolContext):

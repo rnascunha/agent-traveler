@@ -1,5 +1,9 @@
 import json
-import simplekml
+from fastkml import kml
+from fastkml.styles import Style, IconStyle
+from fastkml.data import SimpleData, ExtendedData
+from pygeoif.geometry import Point
+import zipfile
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -11,8 +15,7 @@ iconList = [
         "value": ["airport", "international_airport"],
         "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/airport_pinlet.svg",
         "icon_png": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/airport_pinlet.png",
-        # "icon_png": "https://storage.googleapis.com/agent-traveler/airport_icon_circle.png",
-        "color": "ff00ffaa",
+        "color": "FF00FF00",
     },
     {
         "value": ["car_rental"],
@@ -24,7 +27,7 @@ iconList = [
         "value": ["hotel", "lodging", "extended_stay_hotel", "resort_hotel"],
         "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/hotel_pinlet.svg",
         "icon_png": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/hotel_pinlet.png",
-        "color": "ffffaaaa",
+        "color": "ffff0000",
     },
     {
         "value": ["park", "garden", "hiking_area", "sports_activity_location"],
@@ -95,15 +98,6 @@ def create_icon_map():
 iconMap = create_icon_map()
 
 
-def create_style(place, kml):
-    iconDef = get_icon_color(place)
-    style = kml.newstyle()
-    style.iconstyle.icon.href = iconDef["icon_png"]
-    style.iconstyle.color = iconDef["color"]
-
-    return style
-
-
 def get_icon_color(place):
     type = place["type"].lower().replace(" ", "_")
     if type == "highlights":
@@ -115,18 +109,38 @@ def get_icon_color(place):
     return generic_icon
 
 
-def create_point(pnt, place):
-    # pnt.style.iconstyle.scale = 1.2
-    # iconDef = get_icon_color(place)
+def create_style_id(place):
+    return "#" + place["place_id"]
 
-    pnt.style = place["style"]
 
-    images_html = ""
-    for url in place["photos"]:
-        images_html += f'<img src="{url}">'
+def create_style(place):
+    iconDef = get_icon_color(place)
+    style = Style(
+        styles=[
+            IconStyle(icon_href=iconDef["icon_png"], color=iconDef["color"]),
+        ],
+    )
 
-    pnt.description = f"<div>{images_html}</div>"
-    pnt.extendeddata.newdata(name="place_id", value=place.get("place_id"))
+    return style
+
+
+def create_point(place):
+    images_html = "".join([f'<img src="{url}">' for url in place["photos"]])
+    extendeddata = ExtendedData(
+        elements=[SimpleData(name="place_id", value=place["place_id"])]
+    )
+
+    style = create_style(place)
+
+    placemarks = kml.Placemark(
+        id=place["place_id"],
+        name=place["name"],
+        description=f"<div>{images_html}</div>",
+        geometry=Point(float(place["long"]), float(place["lat"]), 0.0),
+        extended_data=extendeddata,
+        styles=[style],
+    )
+    return placemarks
 
 
 def create_cities_layers(places_list, doc):
@@ -138,36 +152,41 @@ def create_cities_layers(places_list, doc):
         ]
 
     for k, place in cities.items():
-        folder = doc.newfolder(name=place["name"])
-        pnt = folder.newpoint(
-            name=place.get("name"),
-            coords=[(place.get("long"), place.get("lat"))],
-        )
-        create_point(pnt, place)
+        folder = kml.Folder(name=place["name"])
+        doc.append(folder)
+
+        pnt = create_point(place)
+        folder.append(pnt)
         for hplace in highlights.get(k, []):
-            pnt2 = folder.newpoint(
-                name=hplace.get("name"),
-                coords=[(hplace.get("long"), hplace.get("lat"))],
-            )
-            create_point(pnt2, hplace)
+            pnt2 = create_point(hplace)
+            folder.append(pnt2)
 
 
 def create_kml(places_list):
-    kml = simplekml.Kml()
-    for p in data["places_data"]:
-        p["style"] = create_style(p, kml)
-    doc = kml.newdocument(name="Trip information")
+    k = kml.KML()
 
-    create_cities_layers(places_list, doc)
+    d = kml.Document(
+        id="docid",
+        name="My trip",
+        description="This awesome trip",
+    )
+    k.append(d)
+
+    f = kml.Folder(
+        name="Trip information", description="Information of airports, hotels..."
+    )
+    d.append(f)
+
     for place in filter(lambda x: x["type"] not in ["city", "highlights"], places_list):
-        pnt = doc.newpoint(
-            name=place.get("name"),
-            coords=[(place.get("long"), place.get("lat"))],
-        )
-        create_point(pnt, place)
+        f.append(create_point(place))
+    create_cities_layers(places_list, d)
 
-    kml.savekmz(data_kmz_path)
-    return kml.kml()
+    return k.to_string(prettyprint=True)
+
+
+def create_kmz_file(kml_file: str, filename: str):
+    with zipfile.ZipFile(filename, "w", zipfile.ZIP_DEFLATED) as zf:
+        zf.write(kml_file, arcname=kml_file)
 
 
 def create_kml_map(places):
@@ -175,6 +194,8 @@ def create_kml_map(places):
 
     with open(data_kml_path, "w") as wfile:
         wfile.write(kml_data)
+
+    create_kmz_file(data_kml_path, data_kmz_path)
 
 
 data_path = "./data/output/state.json"
