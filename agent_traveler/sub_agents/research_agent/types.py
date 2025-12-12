@@ -46,7 +46,7 @@ class Destination(BaseModel):
         description="A list of places and attractions to visit. Just show the name of the places. No explanation needed",
         default=[],
     )
-    rating: str = Field(description="Numerical rating (e.g., 4.5)", default="")
+    # rating: str = Field(description="Numerical rating (e.g., 4.5)", default="")
 
 
 class DestinationList(BaseModel):

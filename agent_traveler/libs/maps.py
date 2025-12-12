@@ -131,7 +131,7 @@ def create_point(place):
         id=place["place_id"],
         name=place["name"],
         description=f"<div>{images_html}</div>",
-        geometry=Point(float(place["long"]), float(place["lat"]), 0.0),
+        geometry=Point(float(place["longitude"]), float(place["latitude"]), 0.0),
         extended_data=extendeddata,
         styles=[style],
     )

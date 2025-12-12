@@ -21,7 +21,25 @@ from .prompt import (
     verifify_problem_prompt,
     destination_tool_prompt,
 )
-from .types import DestinationList, WhatToPackList, ProblemList, Destination
+from .types import WhatToPackList, ProblemList, Destination
+
+from google.adk.tools.tool_context import ToolContext
+from google.adk.tools.base_tool import BaseTool
+from typing import Dict, Any
+
+
+def after_tool_callback(
+    tool: BaseTool, args: Dict[str, Any], tool_context: ToolContext, tool_response: Dict
+):
+    if not tool_response:
+        return None
+
+    if not tool_context.state.get("destination_data"):
+        tool_context.state["destination_data"] = []
+
+    tool_context.state["destination_data"].append(tool_response)
+
+    return None
 
 
 # Agent tool to research about destination
@@ -39,10 +57,9 @@ destination_agent = Agent(
     name="destination_agent",
     description="Research agent to get information about trips and places.",
     model=DESTIONATION_AGENT_MODEL,
-    output_key="destination_data",
-    output_schema=DestinationList,
     instruction=destination_prompt,
     tools=[AgentTool(destination_tool_agent)],
+    after_tool_callback=after_tool_callback,
     after_agent_callback=research_destination_callback,
 )
 

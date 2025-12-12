@@ -3,57 +3,35 @@ Agent Traveler root agent.
 """
 
 from google.adk.agents import SequentialAgent
-
-from .sub_agents.validate_input_agent.agent import validate_input_agent
-from .sub_agents.extract_data_agent.agent import extract_data_agent
-from .sub_agents.research_agent.agent import research_agent
-from .sub_agents.output_agent.agent import output_agent
-
-from .sub_agents.report_agent.agent import report_agent
-
 from datetime import datetime
 from typing import Optional
 
 from google.adk.agents.callback_context import CallbackContext
 from google.genai import types
 
-def before_agent_callback(callback_context: CallbackContext) -> Optional[types.Content]:
-    """
-    Callback that logs when the agent starts processing a request.
+from .sub_agents.validate_input_agent.agent import validate_input_agent
+from .sub_agents.extract_data_agent.agent import extract_data_agent
+from .sub_agents.research_agent.agent import research_agent, destination_agent
 
-    Args:
-        callback_context: Contains state and context information
+from .sub_agents.report_agent.agent import report_agent
 
-    Returns:
-        None to continue with normal agent processing
-    """
-    state = callback_context.state
-    timestamp = datetime.now()
-    state["request_start_time"] = timestamp.timestamp()
-    print(f">>> Timestamp: {timestamp.strftime('%Y-%m-%d %H:%M:%S')}")
-    return None
+from .tools.places import create_map_points
+from .tools.calendar import create_calendar_tool
+from .tools.artifact import save_report_tool
+
+import asyncio
 
 
-def after_agent_callback(callback_context: CallbackContext) -> Optional[types.Content]:
-    """
-    Callback that logs when the agent finishes processing a request.
+async def create_save_files(callback_context: CallbackContext):
+    tasks = [
+        create_map_points(callback_context),
+        create_calendar_tool(callback_context),
+    ]
+    report = callback_context.state.get("report_data")
+    if report:
+        tasks.append(save_report_tool(report, callback_context))
 
-    Args:
-        callback_context: Contains state and context information
-
-    Returns:
-        None to continue with normal agent processing
-    """
-    state = callback_context.state
-    timestamp = datetime.now()
-    duration = None
-    if "request_start_time" in state:
-        duration = (
-            timestamp - datetime.fromtimestamp((state["request_start_time"]))
-        ).total_seconds()
-
-    if duration is not None:
-        print(f">>> Duration: {duration:.2f} seconds")
+    await asyncio.gather(*tasks)
 
     return None
 
@@ -66,8 +44,6 @@ root_agent = SequentialAgent(
         extract_data_agent,
         research_agent,
         report_agent,
-        output_agent,
     ],
-    before_agent_callback=before_agent_callback,
-    after_agent_callback=after_agent_callback,
+    after_agent_callback=create_save_files,
 )

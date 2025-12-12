@@ -49,8 +49,8 @@ class PlacesService:
                     )
                 case "location":
                     location = place_details["location"]
-                    out["lat"] = str(location["latitude"])
-                    out["long"] = str(location["longitude"])
+                    out["latitude"] = str(location["latitude"])
+                    out["longitude"] = str(location["longitude"])
                 case "formattedAddress":
                     out["address"] = place_details["formattedAddress"]
                 case "id":

@@ -7,30 +7,35 @@ import google.genai.types as types
 import json
 
 
-async def save_artifact_string(
-    data: str, filename: str, mime_type: str, tool_context: ToolContext
+async def save_artifact_bytes(
+    data: bytes, filename: str, mime_type: str, tool_context: ToolContext
 ):
-    bytes = data.encode("utf-8")
-
     try:
         version = await tool_context.save_artifact(
             filename=filename,
-            artifact=types.Part.from_bytes(data=bytes, mime_type=mime_type),
+            artifact=types.Part.from_bytes(data=data, mime_type=mime_type),
         )
-        message = (
-            f"Successfully saved Python artifact '{filename}' as version {version}."
-        )
+        message = f"Successfully saved artifact '{filename}' as version {version}."
         print(message)
         return {"status": "success", "version": version, "message": message}
 
     except ValueError as e:
-        message = f"Error saving Python artifact: {e}. Is ArtifactService configured in Runner?"
+        message = (
+            f"Error saving artifact: {e}. Is ArtifactService configured in Runner?"
+        )
         print(message)
         return {"status": "error", "message": message}
     except Exception as e:
         message = f"An unexpected error occurred during Python artifact save: {e}"
         print(message)
         return {"status": "error", "message": message}
+
+
+async def save_artifact_string(
+    data: str, filename: str, mime_type: str, tool_context: ToolContext
+):
+    bytes = data.encode("utf-8")
+    return await save_artifact_bytes(bytes, filename, mime_type, tool_context)
 
 
 async def save_report_tool(report: str, tool_context: ToolContext):
@@ -48,7 +53,7 @@ async def save_report_tool(report: str, tool_context: ToolContext):
     )
 
 
-async def save_calendar_tool(calendar: str, tool_context: ToolContext):
+async def save_calendar_tool(calendar: bytes, tool_context: ToolContext):
     """Save calendar to the persistent storage
 
     Arg:
@@ -58,7 +63,7 @@ async def save_calendar_tool(calendar: str, tool_context: ToolContext):
     Returns:
         The status of the operation
     """
-    return await save_artifact_string(
+    return await save_artifact_bytes(
         calendar, "calendar.ics", "text/calendar", tool_context
     )
 
@@ -75,19 +80,4 @@ async def save_kml_tool(kml: str, tool_context: ToolContext):
     """
     return await save_artifact_string(
         kml, "map.kml", "application/vnd.google-earth.kml+xml", tool_context
-    )
-
-
-async def save_state_tool(tool_context: ToolContext):
-    """Save agents state
-
-    Arg:
-        tool_context: The ADK tool context.
-
-    Returns:
-        The status of the operation
-    """
-    state_json = json.dumps(tool_context.state.to_dict())
-    return await save_artifact_string(
-        state_json, "state.json", "application/json", tool_context
     )

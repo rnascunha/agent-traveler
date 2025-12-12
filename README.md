@@ -102,3 +102,9 @@ The problem exposed here is inspired by a real case. Much more can be done to im
 
 To use this solution in production, it’s necessary to do an exhaustive evaluation. The solution still fluctuates. Is necessary to improve the prompts of the agents, and a systematic evaluation in a CI/CD environment.
 
+### Commands
+
+Run ADK web:
+```bash
+uv run adk web --session_service_uri sqlite+aiosqlite:////$HOME/session.db --artifact_service_uri file://$HOME/Downloads
+```

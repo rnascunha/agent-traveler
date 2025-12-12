@@ -5,6 +5,7 @@ output a document (markdown format).
 
 from google.adk.agents import Agent
 from agent_traveler.libs.constants import REPORT_AGENT_MODEL
+from agent_traveler.tools.post_process_data import merge_destination_place_callback
 
 from .prompt import prompt
 
@@ -14,4 +15,5 @@ report_agent = Agent(
     description="Summarize and report trip data agent",
     instruction=prompt,
     output_key="report_data",
+    before_agent_callback=merge_destination_place_callback,
 )

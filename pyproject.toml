@@ -5,9 +5,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "aiosqlite>=0.21.0",
     "fastkml[lxml]==1.4.0",
     "geopy>=2.4.1",
-    "google-adk>=1.19.0",
+    "google-adk[database]>=1.19.0",
     "icalendar>=6.3.2",
     "pytz>=2025.2",
 ]

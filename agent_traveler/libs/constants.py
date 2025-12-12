@@ -16,7 +16,7 @@ retry_config = types.HttpRetryOptions(
 # Retry configuration
 retry_config_extend = types.HttpRetryOptions(
     attempts=15,  # Maximum retry attempts
-    exp_base=5,  # Delay multiplier
+    exp_base=8,  # Delay multiplier
     initial_delay=2,
     http_status_codes=[408, 429, 500, 503, 504],  # Retry on these HTTP errors
 )
@@ -30,9 +30,8 @@ ROOT_AGENT_MODEL = DEFAULT_MODEL_RETRY
 VALIDATE_INPUT_AGENT_MODEL = DEFAULT_MODEL_RETRY
 EXTRACT_DATA_AGENT_MODEL = DEFAULT_MODEL_RETRY
 REPORT_AGENT_MODEL = DEFAULT_MODEL_RETRY
-OUTPUT_AGENT_MODEL = DEFAULT_MODEL_RETRY
+OUTPUT_AGENT_MODEL = Gemini(model=DEFAULT_MODEL, retry_options=retry_config_extend)
 
-RESEARCH_AGENT_MODEL = DEFAULT_MODEL_RETRY
 DESTIONATION_AGENT_MODEL = Gemini(
     model=DEFAULT_MODEL, retry_options=retry_config_extend
 )

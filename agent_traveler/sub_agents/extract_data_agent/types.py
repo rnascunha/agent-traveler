@@ -32,13 +32,17 @@ class Hotel(BaseModel):
     address: str = Field(
         description="Full address of the hotel, with zipcode, city, country (if provided)"
     )
-    checkin_date: str = Field(description="Date of the check in, e.g. 23/10/2024")
-    checkin_time: str = Field(
-        description="Time of the check in, with timezone (if provided), e.g. 11:00 (+3:00)"
+    checkin_date: str = Field(
+        description="Date of the check in. Output formated: dd/mm/YYYY, e.g. 23/10/2024"
     )
-    checkout_date: str = Field(description="Date of the check out, e.g. 23/10/2024")
+    checkin_time: str = Field(
+        description="Time of the check in. Output formated: HH:MM, e.g. 11:00 (+3:00)"
+    )
+    checkout_date: str = Field(
+        description="Date of the check out. Output formated: dd/mm/YYYY, e.g. 23/10/2024"
+    )
     checkout_time: str = Field(
-        description="Time of the check out, with timezone (if provided), e.g. 11:00 (+3:00)"
+        description="Time of the check out. Output formated: HH:MM, e.g. 11:00"
     )
     description: str = Field(description="Description of the hotel")
     guests: list[str] = Field(description="List with the name of the guests")
@@ -54,16 +58,20 @@ class CarRent(BaseModel):
     pickup_address: str = Field(
         description="Full address of the car rental to pickup the car, with zipcode, city, country (if provided)"
     )
-    pickup_date: str = Field(description="Date to pickup the car, e.g. 23/10/2023")
+    pickup_date: str = Field(
+        description="Date to pickup the car. Output formated: dd/mm/YYYY, e.g. 23/10/2023"
+    )
     pickup_time: str = Field(
-        description="Time to pickup the car with timezone, e.g. 10:00 (-2:00)"
+        description="Time to pickup the car with timezone. Output formated: HH:MM, e.g. 10:00"
     )
     dropoff_address: str = Field(
         description="Full address of the car rental to dropoff the car, with zipcode, city, country (if provided)"
     )
-    dropoff_date: str = Field(description="Date to pickup the car, e.g. 23/10/2023")
+    dropoff_date: str = Field(
+        description="Date to pickup the car. Output formated: dd/mm/YYYY, e.g. 23/10/2023"
+    )
     dropoff_time: str = Field(
-        description="Time to pickup the car with timezone, e.g. 10:00 (-2:00)"
+        description="Time to pickup the car. Output formated: HH:MM, e.g. 10:00"
     )
     car_category: str = Field(description="Category of the car")
     car_description: str = Field(
@@ -82,16 +90,20 @@ class Flight(BaseModel):
     departure_airport: str = Field(
         description="Airport name and identication of the departure"
     )
-    departure_date: str = Field(description="Date of the departure, e.g. 13/09/2023")
+    departure_date: str = Field(
+        description="Date of the departure. Output formated: dd/mm/YYYY, e.g. 13/09/2023"
+    )
     departure_time: str = Field(
-        description="Time of the departure with timezone, e.g. 06:05 (+5:00)"
+        description="Time of the departure. Output formated: HH:MM, e.g. 06:05"
     )
     arrival_airport: str = Field(
         description="Airport name and identication of the arrival"
     )
-    arrival_date: str = Field(description="Date of the arrival, e.g. 13/09/2023")
+    arrival_date: str = Field(
+        description="Date of the arrival. Output formated: dd/mm/YYYY, e.g. 13/09/2023"
+    )
     arrival_time: str = Field(
-        description="Time of the arrival with timezone, e.g. 06:05 (+5:00)"
+        description="Time of the arrival. Output formated: HH:MM, e.g. 06:05"
     )
     class_type: str = Field(description="Flight class")
     baggage: str = Field(description="Baggage type included at the ticket")

@@ -5,7 +5,6 @@ Its necessary to use a agent to overcome ADK limitation to
 built-in tools in sub agents.
 """
 
-
 from google.adk.agents import Agent
 from google.adk.tools.agent_tool import AgentTool
 from google.adk.tools.google_search_tool import google_search

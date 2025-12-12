@@ -13,5 +13,4 @@ validate_input_agent = Agent(
     model=VALIDATE_INPUT_AGENT_MODEL,
     description="Reponsable to accept and validate the user input",
     instruction=prompt,
-    output_key="file_data",
 )

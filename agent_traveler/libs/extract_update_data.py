@@ -3,6 +3,8 @@ from uuid import uuid4
 from geopy.geocoders import GoogleV3
 import asyncio
 
+import logging
+
 from agent_traveler.libs.places import PlacesService
 
 
@@ -20,6 +22,8 @@ def get_places(data: dict[str, any]):
                     "reference": [f["departure_loc_ref"]],
                 }
             )
+        else:
+            logging.warning(f"Missing departude airport [{f["flight_number"]}]")
         arrival = f.get("arrival_airport")
         if arrival:
             f["arrival_loc_ref"] = str(uuid4())
@@ -31,6 +35,8 @@ def get_places(data: dict[str, any]):
                     "reference": [f["arrival_loc_ref"]],
                 }
             )
+        else:
+            logging.warning(f"Missing arrival airport [{f["flight_number"]}]")
 
     for h in data["hotels"]:
         h["loc_ref"] = str(uuid4())
@@ -76,18 +82,19 @@ def get_place_info(p, place_search):
         p["address"] = info["address"]
         p["place_id"] = info["place_id"]
         p["photos"] = info["photos"]
-        p["lat"] = info["lat"]
-        p["long"] = info["long"]
+        p["latitude"] = info["latitude"]
+        p["longitude"] = info["longitude"]
         p["types"] = info["types"]
         p["map_url"] = info["map_url"]
     except Exception as e:
         p["place_id"] = ""
         p["photos"] = []
-        p["lat"] = ""
-        p["long"] = ""
+        p["latitude"] = ""
+        p["longitude"] = ""
         p["types"] = []
         p["map_url"] = []
-        print(f"Error places: {e}")
+        logging.error(f"Error find_place_from_text [{e}]")
+        logging.debug(p)
 
 
 async def get_places_info(places):
@@ -116,14 +123,16 @@ def remove_duplicates(places):
 
 def get_place_timezone_info(place, geolocator):
     try:
-        if not place["lat"] or not place["long"]:
+        if not place["latitude"] or not place["longitude"]:
+            logging.warning(f"Missing latitude/longitude [{place['name']}]")
+            logging.debug(place)
             return
-        timezone = geolocator.reverse_timezone((place["lat"], place["long"]))
+        timezone = geolocator.reverse_timezone((place["latitude"], place["longitude"]))
         place["timezone"] = timezone.pytz_timezone.zone
     except Exception as e:
         place["timezone"] = ""
-
-    print(f"{place["name"]}: {place["timezone"]}")
+        logging.error(f"Error getting timezone [{e}]")
+        logging.debug(place)
 
 
 async def get_places_timezone_info(places):
@@ -140,6 +149,7 @@ def get_place_by_reference(reference, places):
         if reference in p["reference"]:
             return p
 
+    logging.warning(f"Place reference not found [{reference}]")
     return None
 
 
@@ -202,7 +212,8 @@ def place_tool(
         for k, v in result.items():
             place[k] = v
     except Exception as e:
-        print(e)
+        logging.error(f"Place tool error [{e}]")
+        logging.debug(place)
 
     return place
 
@@ -214,8 +225,8 @@ def update_highlight(h, dest):
         "type": "highlights",
         "place_id": "",
         "map_url": "",
-        "lat": "",
-        "long": "",
+        "latitude": "",
+        "longitude": "",
         "reference": dest["reference"],
     }
     return place_tool(new_place, ", ".join([h, new_place["address"]]))
@@ -228,8 +239,8 @@ def update_destination(dest):
         "type": "city",
         "place_id": "",
         "map_url": "",
-        "lat": "",
-        "long": "",
+        "latitude": "",
+        "longitude": "",
         "reference": dest["reference"],
     }
     return place_tool(new_dest, new_dest["address"])
@@ -248,7 +259,7 @@ async def extract_places_destination(destinations):
             new_places = await asyncio.gather(*tasks)
             places.extend(new_places)
         except Exception as e:
-            print(f"Error: {dest}")
-            print(e)
+            logging.error(f"Destination error [{dest["name"]}]")
+            logging.debug(dest)
 
     return places

@@ -20,9 +20,7 @@ async def research_destination_callback(callback_context: CallbackContext):
     Returns:
       None
     """
-    destinations = callback_context.state.get("destination_data", {}).get(
-        "destination_data", []
-    )
+    destinations = callback_context.state.get("destination_data", [])
     places = await extract_places_destination(destinations)
     callback_context.state["places_data"].extend(places)
 
@@ -42,7 +40,7 @@ async def create_map_points(tool_context: ToolContext):
     """
     places = tool_context.state["places_data"]
 
-    places = [p for p in places if p.get("lat") and p.get("long")]
+    places = [p for p in places if p.get("latitude") and p.get("longitude")]
     if len(places) > 0:
         output = create_kml(places)
         await save_kml_tool(output, tool_context)

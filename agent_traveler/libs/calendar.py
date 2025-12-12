@@ -2,6 +2,8 @@ from icalendar import Calendar, Event, Alarm
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
+import logging
+
 default_values = {
     "target_tz": "America/Sao_Paulo",
     "checkin_time": "14:00",
@@ -22,7 +24,8 @@ def create_flight_event(flight):
         for f in ["departure_date", "departure_time", "arrival_date", "arrival_time"]
     )
     if not check_flight_data:
-        print(flight)
+        logging.warning(f"Missing flight information [{flight["flight_number"]}]")
+        logging.debug(flight)
         return None
 
     try:
@@ -86,12 +89,16 @@ def create_flight_event(flight):
 
         return event
     except Exception as e:
+        logging.error(f"Error setting calendar flight [{e}]")
+        logging.debug(flight)
         return None
 
 
 def create_hotel_event(hotel):
     check_hotel_data = all(hotel.get(f) for f in ["checkin_date", "checkout_date"])
     if not check_hotel_data:
+        logging.warning(f"Missing hotel information [{hotel["name"]}]")
+        logging.debug(hotel)
         return None
 
     try:
@@ -142,12 +149,16 @@ def create_hotel_event(hotel):
 
         return event
     except Exception as e:
+        logging.error(f"Missing hotel information [{e}]")
+        logging.debug(hotel)
         return None
 
 
 def create_car_rental_event(car_rental):
     check_car_rental_event = all(car_rental[f] for f in ["pickup_date", "dropoff_date"])
     if not check_car_rental_event:
+        logging.warning(f"Missing car rental information [{car_rental["name"]}]")
+        logging.debug(car_rental)
         return None
 
     try:
@@ -195,6 +206,8 @@ def create_car_rental_event(car_rental):
 
         return event
     except Exception as e:
+        logging.error(f"Car rental caledar error [{e}]")
+        logging.debug(car_rental)
         return None
 
 
@@ -211,10 +224,12 @@ def create_calendar(trip_data: dict[str, any], prodid=""):
 
     for hotel in trip_data["hotels"]:
         event = create_hotel_event(hotel)
-        cal.add_component(event)
+        if event:
+            cal.add_component(event)
 
     for car_rental in trip_data["car_rents"]:
         event = create_car_rental_event(car_rental)
-        cal.add_component(event)
+        if event:
+            cal.add_component(event)
 
     return cal
