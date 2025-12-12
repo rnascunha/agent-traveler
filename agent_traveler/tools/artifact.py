@@ -4,7 +4,7 @@ Tools to save the artifacts created.
 
 from google.adk.tools import ToolContext
 import google.genai.types as types
-import json
+import logging
 
 
 async def save_artifact_bytes(
@@ -16,18 +16,18 @@ async def save_artifact_bytes(
             artifact=types.Part.from_bytes(data=data, mime_type=mime_type),
         )
         message = f"Successfully saved artifact '{filename}' as version {version}."
-        print(message)
+        logging.info(message)
         return {"status": "success", "version": version, "message": message}
 
     except ValueError as e:
         message = (
             f"Error saving artifact: {e}. Is ArtifactService configured in Runner?"
         )
-        print(message)
+        logging.error(message)
         return {"status": "error", "message": message}
     except Exception as e:
         message = f"An unexpected error occurred during Python artifact save: {e}"
-        print(message)
+        logging.error(message)
         return {"status": "error", "message": message}
 
 
@@ -48,6 +48,7 @@ async def save_report_tool(report: str, tool_context: ToolContext):
     Returns:
         The status of the operation
     """
+    logging.info("Saving report")
     return await save_artifact_string(
         report, "report.md", "text/markdown", tool_context
     )
@@ -63,6 +64,7 @@ async def save_calendar_tool(calendar: bytes, tool_context: ToolContext):
     Returns:
         The status of the operation
     """
+    logging.info("Saving calendar")
     return await save_artifact_bytes(
         calendar, "calendar.ics", "text/calendar", tool_context
     )
@@ -78,6 +80,7 @@ async def save_kml_tool(kml: str, tool_context: ToolContext):
     Returns:
         The status of the operation
     """
+    logging.info("Saving map")
     return await save_artifact_string(
         kml, "map.kml", "application/vnd.google-earth.kml+xml", tool_context
     )

@@ -10,6 +10,8 @@ from agent_traveler.libs.maps import create_kml
 from .artifact import save_kml_tool
 from agent_traveler.libs.extract_update_data import extract_places_destination
 
+import logging
+
 
 async def research_destination_callback(callback_context: CallbackContext):
     """Update infomartion of researched destinations
@@ -20,10 +22,14 @@ async def research_destination_callback(callback_context: CallbackContext):
     Returns:
       None
     """
-    destinations = callback_context.state.get("destination_data", [])
-    places = await extract_places_destination(destinations)
-    callback_context.state["places_data"].extend(places)
+    logging.debug("Entering 'research_destination_callback'")
 
+    destinations = callback_context.state.get("destination_data", [])
+    places, destinations = await extract_places_destination(destinations)
+    callback_context.state["places_data"].extend(places)
+    callback_context.state["destination_data"] = destinations
+
+    logging.debug("Exit 'research_destination_callback'")
     return None
 
 
@@ -38,10 +44,13 @@ async def create_map_points(tool_context: ToolContext):
     Returns:
         The status of the operation, with data
     """
-    places = tool_context.state["places_data"]
+    logging.debug("Entering 'create_map_points'")
 
+    places = tool_context.state["places_data"]
     places = [p for p in places if p.get("latitude") and p.get("longitude")]
+
     if len(places) > 0:
+        logging.info(f"Creating map.kml [{len(places)} points]")
         output = create_kml(places)
         await save_kml_tool(output, tool_context)
         return {"status": "success", "message": "create KML file", "kml": output}

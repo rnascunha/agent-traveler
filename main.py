@@ -11,11 +11,15 @@ from google.genai import types
 from agent_traveler.agent import root_agent
 from agent_traveler.libs.debug import print_event
 
+import logging
+
 load_dotenv()
 
 APP_NAME = "agent-traveler"
 USER_ID = "rafaelo"
 SESSION = "default"
+
+logging.basicConfig(level="INFO")
 
 
 async def run_session(
@@ -45,13 +49,11 @@ async def run_session(
         async for event in runner.run_async(
             user_id=USER_ID, session_id=session.id, new_message=query
         ):
-            if event.is_final_response() and event.content and event.content.parts:
-                print("     Is FINAL RESPONSE")
-                # text = event.content.parts[0].text
-                # if text and text != "None":
-                #     print(f"Model: > {text}")
-            else:
-                print("is NOT FINAL RESPONSE")
+            # if event.is_final_response() and event.content and event.content.parts:
+            #     print("     Is FINAL RESPONSE")
+            # text = event.content.parts[0].text
+            # if text and text != "None":
+            #     print(f"Model: > {text}")
 
             print_event(event, show_deltas=False)
 

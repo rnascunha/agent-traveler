@@ -11,4 +11,5 @@ dependencies = [
     "google-adk[database]>=1.19.0",
     "icalendar>=6.3.2",
     "pytz>=2025.2",
+    "rich>=14.2.0",
 ]

@@ -20,5 +20,5 @@ extract_data_agent = Agent(
     instruction=prompt,
     output_key="extracted_data",
     output_schema=DataExtracted,
-    after_agent_callback=extract_data_callback
+    after_agent_callback=extract_data_callback,
 )

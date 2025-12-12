@@ -262,4 +262,4 @@ async def extract_places_destination(destinations):
             logging.error(f"Destination error [{dest["name"]}]")
             logging.debug(dest)
 
-    return places
+    return places, destinations
