@@ -4,6 +4,7 @@ from datetime import datetime
 import asyncio
 
 from google.adk.runners import Runner
+from google.adk.agents.run_config import RunConfig
 from google.adk.sessions.database_session_service import DatabaseSessionService
 from google.adk.artifacts import FileArtifactService
 from google.genai import types
@@ -46,8 +47,10 @@ async def run_session(
 
         query = types.Content(role="user", parts=user_queries)
 
+        config = RunConfig(save_input_blobs_as_artifacts=True)
+
         async for event in runner.run_async(
-            user_id=USER_ID, session_id=session.id, new_message=query
+            user_id=USER_ID, session_id=session.id, new_message=query, run_config=config
         ):
             # if event.is_final_response() and event.content and event.content.parts:
             #     print("     Is FINAL RESPONSE")
@@ -99,7 +102,7 @@ def create_content_parts():
     for file in files_path:
         with open(file, "rb") as f:
             raw = f.read()
-        part = types.Part(inline_data=types.Blob(data=raw, mime_type="application/pdf"))
+        part = types.Part(inline_data=types.Blob(data=raw, mime_type="application/pdf", display_name=os.path.basename(file)))
         files_parts.append(part)
 
     return files_parts
